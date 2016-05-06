@@ -2,12 +2,15 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
 import android.util.Log;
+
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
-import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by sam_chordas on 10/8/15.
@@ -92,4 +95,58 @@ public class Utils {
     }
     return builder.build();
   }
+
+
+
+  public static String getDayMonth(String date){
+    int monthNo = Integer.parseInt(date.substring(5,7));
+    String year = date.substring(0,4);
+    String day = date.substring(8);
+    String month="";
+    switch (monthNo){
+      case  1:
+        month ="Jan";
+        break;
+      case 2:
+        month = "Feb";
+        break;
+      case 3:
+        month ="March";
+        break;
+      case 4:
+        month ="April";
+        break;
+      case 5:
+        month = "May";
+        break;
+      case 6:
+        month ="June";
+        break;
+      case  7:
+        month ="July";
+        break;
+      case 8:
+        month = "August";
+        break;
+      case 9:
+        month ="Sept";
+        break;
+      case  10:
+        month ="Oct";
+        break;
+      case 11:
+        month = "Nov";
+        break;
+      case 12:
+        month ="Dec";
+        break;
+      default:
+
+    }
+
+    String result = day+" "+month;
+    return  result;
+  }
+
+
 }
