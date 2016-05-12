@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sam_chordas.android.stockhawk">
 
-    <!-- For saving the chart images    -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- For saving the chart images -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -30,18 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.DetailActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName=".ui.MyStocksActivity"
-            android:theme="@style/AppTheme"
-            >
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity" />
         </activity>
-
 
         <service
             android:name=".service.StockTaskService"
@@ -56,7 +53,25 @@
         <provider
             android:name=".data.generated.QuoteProvider"
             android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
-            android:exported="false" />
+            android:exported="true" />
+
+        <!-- Receiver for widget -->
+        <receiver android:name=".widget.StockWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stock_widget_info" />
+        </receiver>
+
+        <!-- For widget -->
+        <service
+            android:name=".widget.WidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
 
     </application>

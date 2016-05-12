@@ -19,7 +19,6 @@ public class StockService {
         Call<QueryResponse> getHistory(
                 @Query("q") String query
 
-
         );
     }
 

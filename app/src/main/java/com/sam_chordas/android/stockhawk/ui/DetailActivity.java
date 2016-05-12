@@ -127,57 +127,6 @@ public  class DetailActivity extends AppCompatActivity {
         }
 
 
-
-        //***************     For creating dummy chart    ****************************///////////
-
-        /*ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
-        entries.add(new Entry(6f, 2));
-        entries.add(new Entry(12f, 3));
-        entries.add(new Entry(18f, 4));
-        entries.add(new Entry(9f, 5));
-
-
-
-
-
-        //Create the dataSet
-        LineDataSet dataset = new LineDataSet(entries, "# of Calls");
-
-
-        //Define the labels
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Jan");
-        labels.add("Feb");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
-
-        //Create the chart
-         chart = new LineChart(getBaseContext());
-        setContentView(chart);
-
-        // Fill chart with data
-       data = new LineData(labels, dataset);
-        chart.setData(data);
-
-        //Add description to the chart
-        chart.setDescription("# of times Alice called Bob");
-
-        chart.setBackgroundColor(getResources().getColor(white));
-
-        //Add a set of colors to chart
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-
-        //Animate the chart
-        chart.animateY(5000);
-
-*/
-
-        //**********************CRETE DUMMY CHART  ***********************************88///
-
     }
 
     @Override
@@ -263,13 +212,8 @@ public  class DetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<QueryResponse> call, Throwable t) {
 
-
-
             }
         });
-
-
-
 
     }
 
@@ -285,9 +229,6 @@ public  class DetailActivity extends AppCompatActivity {
             i++;
 
         }
-
-
-
 
         //Create the dataSet
         LineDataSet dataset = new LineDataSet(entries, "");

@@ -109,22 +109,40 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 @Override public void onInput(MaterialDialog dialog, CharSequence input) {
                   // On FAB click, receive user input. Make sure the stock doesn't already exist
                   // in the DB and proceed accordingly
-                  Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                      new String[] { QuoteColumns.SYMBOL }, QuoteColumns.SYMBOL + "= ?",
-                      new String[] { input.toString() }, null);
-                  if (c.getCount() != 0) {
-                    Toast toast =
-                        Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-                            Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                    toast.show();
-                    return;
-                  } else {
-                    // Add the stock to DB
-                    mServiceIntent.putExtra("tag", "add");
-                    mServiceIntent.putExtra("symbol", input.toString());
-                    startService(mServiceIntent);
-                  }
+
+                  // Here converted the input uppercase before searching for the stock
+
+                  //Handle exception in case stock not found
+
+                 // try {
+
+                      Cursor c = getContentResolver().query(
+                              QuoteProvider.Quotes.CONTENT_URI,
+                              new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
+                              new String[]{input.toString().toUpperCase()}, null);
+                      if (c.getCount() != 0) {
+                        Toast toast =
+                                Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                                        Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                        toast.show();
+                        return;
+                      } else {
+                        // Add the stock to DB
+                        mServiceIntent.putExtra("tag", "add");
+                        mServiceIntent.putExtra("symbol", input.toString());
+                        startService(mServiceIntent);
+                      }
+
+                 // }
+                 /* catch (Exception dbe){
+                    Toast.makeText(getBaseContext(), "Stock not found", Toast.LENGTH_SHORT).show();
+                    Log.d("MyStocksActivity", "Stcok not found");
+                  }*/
+
+
+
+
                 }
               })
               .show();
