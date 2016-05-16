@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * Created by sam_chordas on 10/6/15.
@@ -24,6 +25,12 @@ public abstract class CursorRecyclerViewAdapter <VH extends RecyclerView.ViewHol
     mDataSetObserver = new NotifyingDataSetObserver();
     if (dataIsValid){
       mCursor.registerDataSetObserver(mDataSetObserver);
+    }
+  }
+
+  public class EmptyViewHolder extends RecyclerView.ViewHolder {
+    public EmptyViewHolder(View itemView) {
+      super(itemView);
     }
   }
 

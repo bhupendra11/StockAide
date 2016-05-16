@@ -1,9 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -12,13 +14,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,6 +32,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.CustomRecyclerView;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.Utils;
@@ -55,6 +59,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Cursor mCursor;
   boolean isConnected;
 
+  public static final String ACTION_BAD_STOCK = "com.sam_chordas.android.stockhawk.ACTION_BAD_STOCK";
+  private MyBroadcastReceiver myBroadcastReceiver;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,7 +85,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         networkToast();
       }
     }
-    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+    //Used a simple customRecyclerView which supports emptyView
+    CustomRecyclerView recyclerView = (CustomRecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
@@ -86,15 +95,18 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
             new RecyclerViewItemClickListener.OnItemClickListener() {
               @Override public void onItemClick(View v, int position) {
-                //TODO:
-                // do something on item click
+
                 Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
                 intent.putExtra("symbol", mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)));
                 startActivity(intent);
 
               }
             }));
+    TextView mEmptyView = (TextView) findViewById(R.id.recycler_view_stocks_emptyView);
+    recyclerView.setEmptyView(mEmptyView);
+
     recyclerView.setAdapter(mCursorAdapter);
+
 
 
     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -177,8 +189,22 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
       // are updated.
       GcmNetworkManager.getInstance(this).schedule(periodicTask);
     }
+
+    myBroadcastReceiver = new MyBroadcastReceiver();
+
+    //register BroadcastReceiver
+    IntentFilter intentFilter = new IntentFilter(ACTION_BAD_STOCK);
+    intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+    registerReceiver(myBroadcastReceiver, intentFilter);
+
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    //un-register BroadcastReceiver
+    unregisterReceiver(myBroadcastReceiver);
+  }
 
   @Override
   public void onResume() {
@@ -247,4 +273,19 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mCursorAdapter.swapCursor(null);
   }
 
+
+  public class MyBroadcastReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+      Log.d("MyBroadcastReceiver", "Inside MyBroadcastReceiver");
+
+      if (MyStocksActivity.ACTION_BAD_STOCK.equals(intent.getAction())) {
+        Toast.makeText(context, "Bad Stock input. This stock does not exist",Toast.LENGTH_SHORT);
+      }
+    }
+  }
+
 }
+

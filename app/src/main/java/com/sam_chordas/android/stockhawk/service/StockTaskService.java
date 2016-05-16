@@ -16,6 +16,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -118,8 +119,9 @@ public class StockTaskService extends GcmTaskService{
       try{
         getResponse = fetchData(urlString);
 
-        //Log.d(LOG_TAG, "Json response: \n "+ getResponse);
-
+     /*   Log.d(LOG_TAG, "Json space " + "\n##############################\n###########################################\n######################\n");
+        Log.d(LOG_TAG, "Json response: \n "+ getResponse);
+*/
         result = GcmNetworkManager.RESULT_SUCCESS;
         try {
           ContentValues contentValues = new ContentValues();
@@ -129,11 +131,24 @@ public class StockTaskService extends GcmTaskService{
             mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                 null, null);
           }
-          mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
-              Utils.quoteJsonToContentVals(getResponse));
 
-          Intent dataUpdatedIntent = new Intent(QuoteCursorAdapter.ACTION_DATA_UPDATED).setPackage(mContext.getPackageName());
-          mContext.sendBroadcast(dataUpdatedIntent);
+          // isUpdated checks to see the size of arrayList returned by Utils.quoteJsonToContentVals(getResponse) method
+          //  if size > 0 , it means batchOperations have been performed
+          // else it means no batchOperations are performed i.e there is some mistake with the input stock
+          int isUpdated = Utils.quoteJsonToContentVals(getResponse).size();
+          if(isUpdated != 0){
+            mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, Utils.quoteJsonToContentVals(getResponse));
+
+            Intent dataUpdatedIntent = new Intent(QuoteCursorAdapter.ACTION_DATA_UPDATED).setPackage(mContext.getPackageName());
+            mContext.sendBroadcast(dataUpdatedIntent);
+          }
+          else {
+            Log.d("StockTaskService", "No update in Db , Incorrect stock provided , sending badStockIntentBroadcast");
+
+           // return MyStocksActivity.INCORRECT_STOCK_PROVIDED;
+            Intent badStockIntent = new Intent(MyStocksActivity.ACTION_BAD_STOCK).setPackage(mContext.getPackageName());
+            mContext.sendBroadcast(badStockIntent);
+          }
 
         }catch (RemoteException | OperationApplicationException e){
           Log.e(LOG_TAG, "Error applying batch insert", e);

@@ -6,11 +6,25 @@
     android:layout_height="match_parent"
     >
 
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/recycler_view"
+  <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
+      >
+    <com.sam_chordas.android.stockhawk.rest.CustomRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <TextView
+        android:id="@+id/recycler_view_stocks_emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/empty_stocks_list"
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        />
+
+    </FrameLayout>
 
   <com.melnykov.fab.FloatingActionButton
       android:id="@+id/fab"

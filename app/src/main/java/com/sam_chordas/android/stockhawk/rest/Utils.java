@@ -33,8 +33,25 @@ public class Utils {
         if (count == 1){
           jsonObject = jsonObject.getJSONObject("results")
               .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
-        } else{
+
+          /**
+          Check here if the stock exists or not
+          Only start batchOperation if stock exists else return empty List
+          This can be done by checking the value of Bid , if it is null , the stock does not exist;
+          */
+          String BidPrice = jsonObject.getString("Bid");
+
+          Log.d(LOG_TAG , "BidPrice Value = " +BidPrice );
+          if (BidPrice.equals("null")){
+            Log.d(LOG_TAG , "BidPrice is null here");
+            //Empty arrayList is returned here
+          }
+          else{
+            //Here since the stock exists so start the batch operations
+            batchOperations.add(buildBatchOperation(jsonObject));
+          }
+        }
+        else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
 
           if (resultsArray != null && resultsArray.length() != 0){
@@ -52,8 +69,18 @@ public class Utils {
   }
 
   public static String truncateBidPrice(String bidPrice){
-    bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
-    return bidPrice;
+
+    //handle error in case no stock found
+    Log.d(LOG_TAG , "BidPrice = "+bidPrice);
+    if(bidPrice ==null){
+      Log.d(LOG_TAG , "Inside if Block");
+      return "";
+    }
+    else{
+      bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+      return bidPrice;
+    }
+
   }
 
   public static String truncateChange(String change, boolean isPercentChange){
@@ -79,7 +106,16 @@ public class Utils {
     try {
       String change = jsonObject.getString("Change");
       builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-      builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+
+    /*  String BidPrice = jsonObject.getString("Bid");
+      Log.d(LOG_TAG , "BidPrice Value = " +BidPrice );
+      if (BidPrice.equals("null")){
+        Log.d(LOG_TAG , "BidPrice is null here");
+      }
+      else{*/
+        builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+     // }
+
       builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
           jsonObject.getString("ChangeinPercent"), true));
       builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));

@@ -67,6 +67,7 @@
                 android:resource="@xml/stock_widget_info" />
         </receiver>
 
+
         <!-- For widget -->
         <service
             android:name=".widget.WidgetService"
