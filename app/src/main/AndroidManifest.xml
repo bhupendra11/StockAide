@@ -34,7 +34,7 @@
             android:name=".ui.DetailActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName=".ui.MyStocksActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/MyMaterialTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity" />

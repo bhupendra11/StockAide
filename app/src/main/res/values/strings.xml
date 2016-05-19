@@ -16,7 +16,9 @@
     <string name="add_widget">Add widget</string>
     <string name="empty_stocks_list">There are no stocks to display. Check your internet connection and try again</string>
     <string name="all_stocks_deleted">All stocks deleted. Add a stock to display data.</string>
-    
 
-    
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>
