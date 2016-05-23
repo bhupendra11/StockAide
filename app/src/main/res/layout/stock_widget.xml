@@ -9,7 +9,7 @@
         android:id="@+id/widget"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:background="@color/material_blue_500">
+        android:background="@color/colorPrimary">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/material_grey_800">
+        android:colorBackground="@color/windowBackground"
+        android:textColor="@color/material_black_color"
+        >
         <ListView
             android:id="@+id/widget_list"
             android:layout_width="match_parent"

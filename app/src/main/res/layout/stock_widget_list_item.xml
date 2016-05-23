@@ -9,13 +9,16 @@
     android:paddingRight="16dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:id="@+id/widget_list_item">
+    android:id="@+id/widget_list_item"
+    android:background="@color/windowBackground"
+    android:textColor="@color/navigationBarColor">
     <TextView
         android:id="@+id/stock_symbol"
         style="@style/StockSymbolTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
+        android:textColor="@color/material_black_color"
         tools:text="GOOG"
         />
     <LinearLayout
@@ -30,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="10sp"
+            android:textColor="@color/material_black_color"
             tools:text="1000.00"
             />
         <TextView

@@ -90,6 +90,10 @@ public  class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //As data is available , load layout
+      //  mProgressBar.setVisibility(View.VISIBLE);
+
         intent = getIntent();
         stock = intent.getStringExtra("symbol");
 
@@ -98,6 +102,9 @@ public  class DetailActivity extends AppCompatActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey(QUOTE_LIST_BUNDLE)) {
             //Orientation changed so fetch data from savedInstanceState bundle
 
+            //As data is available , load layout
+           // mProgressBar.setVisibility(View.VISIBLE);
+
             quoteList = savedInstanceState.getParcelableArrayList(QUOTE_LIST_BUNDLE);
             Log.d(LOG_TAG , "Inside onCreate , data loaded from bundle , quoteList size = " +quoteList.size());
 
@@ -105,13 +112,17 @@ public  class DetailActivity extends AppCompatActivity {
             quoteHash = Utils.saveStockQuotes(quoteList);
             //addQuotes(quoteHash);
 
+
+            setContentView(R.layout.activity_detail);
+
+
             createTabbedLayout();
         }
         else{  //query the api for data
 
             mContext = this;
 
-
+            //mProgressBar.setVisibility(View.VISIBLE);
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date dateobj = new Date();
@@ -172,8 +183,12 @@ public  class DetailActivity extends AppCompatActivity {
             retrieveHistoryService = retrofit.create(StockService.RetrieveHistoryService.class);
 
 
+            //As data is available , load layout
+            setContentView(R.layout.activity_detail);
 
             if(isConnected){
+
+
 
                 getQuotes(queryForDetail);
 
@@ -184,7 +199,6 @@ public  class DetailActivity extends AppCompatActivity {
             }
 
         }
-
 
 
     }
@@ -310,7 +324,7 @@ public  class DetailActivity extends AppCompatActivity {
 
                 Log.d(LOG_TAG , "getQuotes() finished  , size of quotesList =" +quoteList.size() );
 
-
+//                mProgressBar.setVisibility(View.INVISIBLE);
 
                createTabbedLayout();
             }

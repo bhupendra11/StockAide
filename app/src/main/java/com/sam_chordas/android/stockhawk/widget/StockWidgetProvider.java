@@ -24,6 +24,7 @@ public class StockWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stock_widget);
+        views.setRemoteAdapter(R.id.widget_list, new Intent(context, WidgetService.class));
 
         // Create an Intent to launch MainActivity on clicking heading
         Intent intent = new Intent(context, MyStocksActivity.class);

@@ -3,8 +3,13 @@
   <!-- Base application theme. -->
   <style name="AppTheme"
       parent="Theme.AppCompat">
-      <item name="colorPrimary">@color/material_blue_500</item>
-      <item name="colorPrimaryDark">@color/material_blue_700</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+      <item name="android:windowBackground">@color/windowBackground</item>
+      <item name="android:colorBackground">@color/windowBackground</item>
+      <item name="android:textColor">@color/navigationBarColor</item>
+
     <!-- Customize your theme here. -->
   </style>
 
