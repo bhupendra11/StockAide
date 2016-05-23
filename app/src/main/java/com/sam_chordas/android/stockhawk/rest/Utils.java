@@ -1,16 +1,32 @@
 package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.model.Quote;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sam_chordas on 10/8/15.
@@ -184,5 +200,101 @@ public class Utils {
     return  result;
   }
 
+
+  public static HashMap<String, Double> saveStockQuotes(ArrayList<Quote> quoteList){
+    HashMap<String, Double> qHash= new LinkedHashMap<String, Double>();
+
+    for(Quote quote : quoteList){
+      qHash.put(quote.getDate() , quote.getClose());
+
+    }
+    return qHash;
+  }
+
+
+  // method to add quotes to graph
+  public static void addQuotes(HashMap<String, Double> quoteHash ,ArrayList<Quote> quoteList , View rootView, int days , int chartViewId)  {
+
+    LineChart chart;
+    LineData data;
+
+    ArrayList<Entry> entries = new ArrayList<>();
+
+    //Define the labels
+    ArrayList<String> labels = new ArrayList<>();
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    Date curDate = new Date();
+
+    Date dateobj = new Date();
+    try {
+      curDate =df.parse(dateobj.toString());
+    }
+    catch (ParseException pe){
+      pe.printStackTrace();
+    }
+
+
+    int i=0;
+    String friendlyDate;
+    for (Map.Entry<String, Double> quote: quoteHash.entrySet()){
+
+      Date date = new Date();
+      try {
+        date = df.parse(quote.getKey());
+      }
+      catch (ParseException pe){
+        pe.printStackTrace();
+      }
+
+      long duration = curDate.getTime() - date.getTime();
+      long diffInDays = TimeUnit.DAYS.convert(duration, TimeUnit.MILLISECONDS);
+
+      Log.d(LOG_TAG, "Date : "+quote.getKey()+"  Value : "+quote.getValue());
+
+      if(diffInDays <= days) {
+        entries.add(new Entry(Float.parseFloat(quote.getValue().toString()), i));
+        friendlyDate = Utils.getDayMonth(quote.getKey().toString());
+        labels.add(friendlyDate + " ");
+        i++;
+      }
+      else
+        break;
+    }
+    //Create the dataSet
+    LineDataSet dataset = new LineDataSet(entries, "");
+
+
+
+      Log.d(LOG_TAG, "quoteListSize = "+quoteList.size());
+   String stockSymbol = quoteList.get(0).getSymbol();
+
+       /* TextView stockSymbolView = (TextView) rootView.findViewById(R.id.stock_symbol);
+        stockSymbolView.setText(stockSymbol)*/;
+
+    //Create the chart
+    chart = (LineChart) rootView.findViewById(chartViewId);
+
+
+    // Fill chart with data
+    data = new LineData(labels, dataset);
+    chart.setData(data);
+
+    //Add description to the chart
+    chart.setDescription("Stock close value over time");
+
+    chart.setBackgroundColor(Color.parseColor("#ffffff"));
+
+    //Add a set of colors to chart
+    dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+
+    //Animate the chart
+    chart.animateX(1000);
+    chart.animateY(1000);
+
+
+
+
+  }
 
 }

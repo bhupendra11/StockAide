@@ -3,8 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sam_chordas.android.stockhawk.ui.MonthFragment"
-    android:background="#ff0000">
+    android:background="#ff0000"
+    android:id="@+id/month_fragment">
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/month_chart">
+    </com.github.mikephil.charting.charts.LineChart>
 
 
 </FrameLayout>

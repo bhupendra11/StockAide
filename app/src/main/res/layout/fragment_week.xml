@@ -3,8 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sam_chordas.android.stockhawk.ui.WeekFragment"
-    android:background="#0000ff">
+    android:background="#0000ff"
+    android:id="@+id/week_fragment">
 
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/week_chart">
+
+    </com.github.mikephil.charting.charts.LineChart>
 
 
 </FrameLayout>
