@@ -47,6 +47,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
    */
 
   /**
+   *
    * Used to store the last screen title. For use in {@link #restoreActionBar()}.
    */
 
@@ -97,7 +98,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               @Override public void onItemClick(View v, int position) {
 
                 Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-                intent.putExtra("symbol", mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)));
+                mCursor.moveToPosition(position);
+
+                String stockSymbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
+                Log.d("MyStocksActivity" , "Stock Symbol is " +stockSymbol);
+                intent.putExtra("symbol", stockSymbol);
                 startActivity(intent);
 
               }

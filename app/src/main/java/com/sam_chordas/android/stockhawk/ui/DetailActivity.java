@@ -90,13 +90,18 @@ public  class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        intent = getIntent();
+        stock = intent.getStringExtra("symbol");
+
+        Log.d(LOG_TAG , "Stock symbol is  "+stock);
+
         if (savedInstanceState != null && savedInstanceState.containsKey(QUOTE_LIST_BUNDLE)) {
             //Orientation changed so fetch data from savedInstanceState bundle
 
             quoteList = savedInstanceState.getParcelableArrayList(QUOTE_LIST_BUNDLE);
             Log.d(LOG_TAG , "Inside onCreate , data loaded from bundle , quoteList size = " +quoteList.size());
 
-            stock = intent.getStringExtra("symbol");
+
             quoteHash = Utils.saveStockQuotes(quoteList);
             //addQuotes(quoteHash);
 
@@ -105,7 +110,7 @@ public  class DetailActivity extends AppCompatActivity {
         else{  //query the api for data
 
             mContext = this;
-            intent = getIntent();
+
 
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,7 +122,7 @@ public  class DetailActivity extends AppCompatActivity {
             String startDate = "2016-01-01";
             String resultJSON ="";
 
-            stock = intent.getStringExtra("symbol");
+          //  stock = intent.getStringExtra("symbol");
 
             try {
                 android.support.v7.app.ActionBar actionBar = getSupportActionBar();
