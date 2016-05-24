@@ -3,12 +3,14 @@
     android:fromDegrees ="90"
     android:pivotX="50%"
     android:pivotY="50%"
-    android:toDegrees ="360" >
+    android:toDegrees ="360"
+    >
 
     <shape
         android:innerRadiusRatio = "3"
         android:shape ="ring"
-        android:thicknessRatio ="7.0">
+        android:thicknessRatio ="7.0"
+        >
         <gradient
             android:angle = "0"
             android:type = "sweep"

@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,10 +66,15 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   public static final String ACTION_BAD_STOCK = "com.sam_chordas.android.stockhawk.ACTION_BAD_STOCK";
   private MyBroadcastReceiver myBroadcastReceiver;
 
+  private FrameLayout frameLayout;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mContext = this;
+
+    frameLayout = (FrameLayout) findViewById(android.R.id.content);
+
     ConnectivityManager cm =
         (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -86,6 +94,33 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         networkToast();
       }
     }
+
+    //Display no network message when network is not available and old stocks  are displayed
+    TextView noNetworkView = (TextView) findViewById(R.id.no_network_view_stock_list);
+    if(!isConnected){
+      //noNetworkView.setVisibility(View.VISIBLE);
+
+      Snackbar snackbar = Snackbar
+              .make(frameLayout, "No internet connection!", Snackbar.LENGTH_INDEFINITE)
+              .setAction("RETRY", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  recreate();
+                }
+              });
+
+      // Changing message text color
+      snackbar.setActionTextColor(Color.RED);
+
+      // Changing action button text color
+      View sbView = snackbar.getView();
+      TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+      textView.setTextColor(Color.YELLOW);
+
+      snackbar.show();
+
+    }
+
 
     //Used a simple customRecyclerView which supports emptyView
     CustomRecyclerView recyclerView = (CustomRecyclerView) findViewById(R.id.recycler_view);
@@ -118,6 +153,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     fab.attachToRecyclerView(recyclerView);
     fab.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
+
         if (isConnected){
           new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
               .content(R.string.content_test)
@@ -169,6 +205,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
       }
     });
+
+
 
     ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
     mItemTouchHelper = new ItemTouchHelper(callback);

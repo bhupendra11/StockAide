@@ -15,7 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
@@ -88,7 +91,6 @@ public  class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         //As data is available , load layout
@@ -96,8 +98,22 @@ public  class DetailActivity extends AppCompatActivity {
 
         intent = getIntent();
         stock = intent.getStringExtra("symbol");
-
         Log.d(LOG_TAG , "Stock symbol is  "+stock);
+
+        try {
+            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+            actionBar.setTitle(stock);
+            Log.d(LOG_TAG , "Title set for actionbar as " +stock);
+
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+            Log.d(LOG_TAG , "Could not set title , NPE thrown");
+        }
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         if (savedInstanceState != null && savedInstanceState.containsKey(QUOTE_LIST_BUNDLE)) {
             //Orientation changed so fetch data from savedInstanceState bundle
@@ -112,8 +128,6 @@ public  class DetailActivity extends AppCompatActivity {
             quoteHash = Utils.saveStockQuotes(quoteList);
             //addQuotes(quoteHash);
 
-
-            setContentView(R.layout.activity_detail);
 
 
             createTabbedLayout();
@@ -134,17 +148,6 @@ public  class DetailActivity extends AppCompatActivity {
             String resultJSON ="";
 
           //  stock = intent.getStringExtra("symbol");
-
-            try {
-                android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-                actionBar.setTitle(stock);
-                Log.d(LOG_TAG , "Title set for actionbar");
-
-            }
-            catch (NullPointerException e){
-                e.printStackTrace();
-                Log.d(LOG_TAG , "Could not set title , NPE thrown");
-            }
 
 
 
@@ -183,9 +186,6 @@ public  class DetailActivity extends AppCompatActivity {
             retrieveHistoryService = retrofit.create(StockService.RetrieveHistoryService.class);
 
 
-            //As data is available , load layout
-            setContentView(R.layout.activity_detail);
-
             if(isConnected){
 
 
@@ -197,6 +197,13 @@ public  class DetailActivity extends AppCompatActivity {
                 }
 
             }
+            else{
+                LinearLayout loadingHistoryView = (LinearLayout) findViewById(R.id.loadingLayout);
+                loadingHistoryView.setVisibility(View.GONE);
+                TextView emptyDetailView = (TextView) findViewById(R.id.detail_empty_textview);
+                emptyDetailView.setVisibility(View.VISIBLE);
+            }
+
 
         }
 
@@ -207,8 +214,6 @@ public  class DetailActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(stock);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);

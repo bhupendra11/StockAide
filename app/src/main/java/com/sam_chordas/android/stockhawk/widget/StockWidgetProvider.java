@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
@@ -40,8 +41,16 @@ public class StockWidgetProvider extends AppWidgetProvider {
         }
 
         //Open details view on tapping any quote from widget
-        Intent clickIntentTemplate = new Intent(context, DetailActivity.class);
+      /*  Intent clickIntentTemplate = new Intent(context, DetailActivity.class);
         PendingIntent clickPendingIntentTemplate =PendingIntent.getActivity(context, 0, clickIntentTemplate,PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
+        views.setEmptyView(R.id.widget_list, R.id.widget_empty);*/
+
+        Intent clickIntentTemplate =  new Intent(context, DetailActivity.class);
+
+        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(clickIntentTemplate)
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
         views.setEmptyView(R.id.widget_list, R.id.widget_empty);
 

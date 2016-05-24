@@ -1,15 +1,30 @@
+<android.support.design.widget.CoordinatorLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/frame_layout"
+
     >
 
   <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
+    <TextView
+        android:id="@+id/no_network_view_stock_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_network_stocks_list"
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        android:visibility="gone"
+        />
     <com.sam_chordas.android.stockhawk.rest.CustomRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -42,3 +57,5 @@
       fab:layout_anchorGravity="bottom | end"
       />
 </FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
+

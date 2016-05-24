@@ -14,11 +14,14 @@
     <string name="save_graph">Save as Image</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="empty_stocks_list">There are no stocks to display. Check your internet connection and try again</string>
+    <string name="empty_stocks_list">There are no stocks to display. The network is not available to fetch stock data.</string>
     <string name="all_stocks_deleted">All stocks deleted. Add a stock to display data.</string>
 
+    <string name="no_history">No stock information available.The network is not available to fetch stock data.</string>
+    <string name="no_network_stocks_list">No network is available.Connect to network to get updated stock info and add new stocks. </string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loading_stock_history">Loading stock history ..</string>
 
 
 </resources>
