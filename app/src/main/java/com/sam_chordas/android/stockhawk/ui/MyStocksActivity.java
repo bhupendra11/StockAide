@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
@@ -192,46 +193,41 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
                   // Here converted the input uppercase before searching for the stock
 
-                  //Handle exception in case stock not found
-
-                 // try {
-
-                      Cursor c = getContentResolver().query(
-                              QuoteProvider.Quotes.CONTENT_URI,
-                              new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
-                              new String[]{input.toString().toUpperCase()}, null);
-                      if (c.getCount() != 0) {
-                        Toast toast =
-                                Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-                                        Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                        toast.show();
-                        return;
-                      } else {
-                        // Add the stock to DB
-                        mServiceIntent.putExtra("tag", "add");
-                        mServiceIntent.putExtra("symbol", input.toString().toUpperCase());
-                        startService(mServiceIntent);
-                      }
-
-                 // }
-                 /* catch (Exception dbe){
-                    Toast.makeText(getBaseContext(), "Stock not found", Toast.LENGTH_SHORT).show();
-                    Log.d("MyStocksActivity", "Stcok not found");
-                  }*/
 
 
+                    Cursor c = getContentResolver().query(
+                            QuoteProvider.Quotes.CONTENT_URI,
+                            new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
+                            new String[]{input.toString().toUpperCase()}, null);
+                    if (c.getCount() != 0) {
+                      Toast toast =
+                              Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                                      Toast.LENGTH_LONG);
+                      toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                      toast.show();
+                      return;
+                    } else {
+                      // Add the stock to DB
+                      mServiceIntent.putExtra("tag", "add");
+                      mServiceIntent.putExtra("symbol", input.toString().toUpperCase());
+                      startService(mServiceIntent);
+                    }
+                  c.close();
 
 
                 }
               })
               .show();
+
+
         } else {
           networkToast();
         }
 
       }
     });
+
+
 
 
 
@@ -350,7 +346,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   }
 
 
-
-
+  @Override
+  public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+    super.onSaveInstanceState(outState, outPersistentState);
+  }
 }
 

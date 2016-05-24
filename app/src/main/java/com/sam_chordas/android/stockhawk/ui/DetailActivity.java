@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -37,6 +36,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,8 +65,6 @@ public  class DetailActivity extends AppCompatActivity {
 
     private Call<QueryResponse> callQueryResponse;
     private QueryResponse queryResponse;
-    private int quoteCount=0;
-    private ProgressBar mProgressBar;
     private String stock ="";
 
     //for fetching quotes
@@ -78,6 +76,9 @@ public  class DetailActivity extends AppCompatActivity {
     public static final String QUOTE_LIST_BUNDLE = "Quote_List_Bundle";
 
     public static final String QUOTE_HASHMAP = "Quote_Hashmap";
+
+    // Here we display data for a max for 6 moths , so fetching data for 7 months approx
+    public static final int DAYS_TO_FETCH_DATA_FOR = 30*7;
 
     //for tabbed layout
     private Toolbar toolbar;
@@ -139,15 +140,24 @@ public  class DetailActivity extends AppCompatActivity {
             //mProgressBar.setVisibility(View.VISIBLE);
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Date dateobj = new Date();
+            Date todayDateObj = new Date();
 
-            Log.d(LOG_TAG, "Current date : "+df.format(dateobj).toString());
+            Log.d(LOG_TAG, "Current date : "+df.format(todayDateObj).toString());
 
-            String todayDate = df.format(dateobj).toString();
-            String startDate = "2016-01-01";
+            long daysToSub =  210*1000 * 60 * 60 * 24;
+
+
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(todayDateObj);
+            c.add(Calendar.DATE, -DAYS_TO_FETCH_DATA_FOR);
+            Date start = c.getTime();
+
+
+            String todayDate = df.format(todayDateObj).toString();
+            String startDate = df.format(start).toString();
+
             String resultJSON ="";
-
-          //  stock = intent.getStringExtra("symbol");
 
 
 
@@ -372,11 +382,6 @@ public  class DetailActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_save_graph){
-            // this is for changing stock changes from percent value to dollar value
-            chart.saveToGallery("mychart.jpg", 85);
-            Log.d(LOG_TAG, "Saved Graph Image");
-        }
 
         return super.onOptionsItemSelected(item);
     }
