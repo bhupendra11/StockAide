@@ -3,6 +3,7 @@ package com.sam_chordas.android.stockhawk.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -87,9 +88,21 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
 
         if(mCursor.moveToPosition(position)){
 
-            remoteViews.setTextViewText(R.id.stock_symbol,mCursor.getString(INDEX_QUOTE_SYMBOL) );
-            remoteViews.setTextViewText(R.id.bid_price , mCursor.getString(INDEX_QUOTE_BIDPRICE));
-            remoteViews.setTextViewText(R.id.change , mCursor.getString(INDEX_QUOTE_CHANGE));
+            String symbol = mCursor.getString(INDEX_QUOTE_SYMBOL);
+            String bidPrice = mCursor.getString(INDEX_QUOTE_BIDPRICE);
+            String change = mCursor.getString(INDEX_QUOTE_CHANGE);
+
+            remoteViews.setTextViewText(R.id.stock_symbol,symbol);
+            remoteViews.setTextViewText(R.id.bid_price , bidPrice);
+            remoteViews.setTextViewText(R.id.change , change);
+
+            // Content Descriptions for RemoteViews were only added in ICS MR1
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                remoteViews.setContentDescription(R.id.stock_symbol , mContext.getString(R.string.a11y_stock_symbol, symbol));
+                remoteViews.setContentDescription(R.id.bid_price , mContext.getString(R.string.a11y_bid_price, bidPrice));
+                remoteViews.setContentDescription(R.id.change, mContext.getString(R.string.a11y_change, change));
+            }
+
 
             //int isUpIndex = mCursor.getColumnIndex(QuoteColumns.ISUP);
 

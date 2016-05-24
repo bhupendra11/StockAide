@@ -48,6 +48,7 @@
       android:layout_gravity="bottom|right"
       android:layout_margin="16dp"
       android:src="@drawable/ic_add_white_24dp"
+      android:contentDescription="@string/fab_add_stock"
       fab:fab_colorNormal="@color/colorPrimary"
       fab:fab_colorPressed="@color/colorPrimaryDark"
       fab:fab_colorRipple="@color/ripple"

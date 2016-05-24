@@ -48,6 +48,7 @@ public class Month6Fragment extends Fragment {
 
         Utils.addQuotes(quoteHash ,quoteList , rootView ,DAYS_IN_6_MONTHS,chartViewId );
 
+        rootView.setContentDescription(getString(R.string.a11y_graph_desc,DAYS_IN_6_MONTHS));
 
 
         return rootView;

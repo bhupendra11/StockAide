@@ -1,7 +1,5 @@
-<resources>
-    <string name="app_name">Stock Hawk</string>
-
-    <string name="action_example">Example action</string>
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">Stock Hawk</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_change_units">Change Units</string>
@@ -22,6 +20,14 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading_stock_history">Loading stock history ..</string>
+
+    <!-- A11y -->
+    <string name="a11y_stock_symbol">Stock : <xliff:g id="symbol">%1$s</xliff:g></string>
+    <string name="a11y_bid_price">Bid price : <xliff:g id="bid_price">%1$s</xliff:g></string>
+    <string name="a11y_change">Change : <xliff:g id="change">%1$s</xliff:g></string>
+    <string name="a11y_graph_desc">Graph displaying changes in stock over a period of:  <xliff:g id="duration">%1$s</xliff:g> days</string>
+
+    <string name="fab_add_stock">Add new stock</string>
 
 
 </resources>
