@@ -11,7 +11,8 @@
     android:paddingEnd="16dp"
     android:id="@+id/widget_list_item"
     android:background="@color/windowBackground"
-    android:textColor="@color/navigationBarColor">
+    android:textColor="@color/navigationBarColor"
+    android:clickable="true">
     <TextView
         android:id="@+id/stock_symbol"
         style="@style/StockSymbolTextStyle"

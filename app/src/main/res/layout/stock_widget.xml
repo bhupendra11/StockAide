@@ -35,7 +35,8 @@
             android:layout_height="match_parent"
             android:divider="@null"
             android:dividerHeight="0dp"
-            tools:listitem="@layout/stock_widget_list_item"/>
+            tools:listitem="@layout/stock_widget_list_item"
+            android:clickable="true"/>
         <TextView
             android:id="@+id/widget_empty"
             android:layout_width="match_parent"

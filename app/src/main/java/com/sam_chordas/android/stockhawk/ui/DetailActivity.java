@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +54,6 @@ public  class DetailActivity extends AppCompatActivity {
 
     private LineChart chart;
     private LineData data;
-    private String LOG_TAG =DetailActivity.class.getSimpleName();
     OkHttpClient okClient  = new OkHttpClient();
     private boolean isConnected =false;
     private Context mContext;
@@ -93,23 +91,17 @@ public  class DetailActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        //As data is available , load layout
-      //  mProgressBar.setVisibility(View.VISIBLE);
 
         intent = getIntent();
         stock = intent.getStringExtra("symbol");
-        Log.d(LOG_TAG , "Stock symbol is  "+stock);
 
         try {
             android.support.v7.app.ActionBar actionBar = getSupportActionBar();
             actionBar.setTitle(stock);
-            Log.d(LOG_TAG , "Title set for actionbar as " +stock);
 
         }
         catch (NullPointerException e){
             e.printStackTrace();
-            Log.d(LOG_TAG , "Could not set title , NPE thrown");
         }
 
 
@@ -119,12 +111,8 @@ public  class DetailActivity extends AppCompatActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey(QUOTE_LIST_BUNDLE)) {
             //Orientation changed so fetch data from savedInstanceState bundle
 
-            //As data is available , load layout
-           // mProgressBar.setVisibility(View.VISIBLE);
 
             quoteList = savedInstanceState.getParcelableArrayList(QUOTE_LIST_BUNDLE);
-            Log.d(LOG_TAG , "Inside onCreate , data loaded from bundle , quoteList size = " +quoteList.size());
-
 
             quoteHash = Utils.saveStockQuotes(quoteList);
             //addQuotes(quoteHash);
@@ -141,8 +129,6 @@ public  class DetailActivity extends AppCompatActivity {
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date todayDateObj = new Date();
-
-            Log.d(LOG_TAG, "Current date : "+df.format(todayDateObj).toString());
 
             long daysToSub =  210*1000 * 60 * 60 * 24;
 
@@ -162,8 +148,6 @@ public  class DetailActivity extends AppCompatActivity {
 
 
             String queryForDetail = "select * from yahoo.finance.historicaldata where symbol = \'"+stock+"\' and startDate = \'"+startDate+"\' and endDate = \'"+todayDate+"\'";
-            Log.d(LOG_TAG , "Query :" +queryForDetail);
-
 
             //Check connectivity
             ConnectivityManager cm =
@@ -197,14 +181,7 @@ public  class DetailActivity extends AppCompatActivity {
 
 
             if(isConnected){
-
-
-
                 getQuotes(queryForDetail);
-
-                for(Quote quote : quoteList){
-                    Log.d(LOG_TAG , String.valueOf(quote.getClose()));
-                }
 
             }
             else{
@@ -231,7 +208,7 @@ public  class DetailActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        Log.d(LOG_TAG , "Tabs created");
+
     }
 
 
@@ -258,7 +235,6 @@ public  class DetailActivity extends AppCompatActivity {
             Fragment fragment = mFragmentList.get(position);
             Bundle args = new Bundle();
 
-            //Log.d(LOG_TAG, "Adding quotes bundle , size is = "+quoteList.size());
             // Our object is just an integer :-P
             args.putParcelableArrayList(QUOTE_HASHMAP,quoteList);
             fragment.setArguments(args);
@@ -286,36 +262,25 @@ public  class DetailActivity extends AppCompatActivity {
 
     public void getQuotes(String queryString){
 
-
-        Log.d(LOG_TAG , "Inside getQuotes() , query is " +queryString );
-
         callQueryResponse = retrieveHistoryService.getHistory(queryString);
-
-
         callQueryResponse.enqueue(new retrofit2.Callback<QueryResponse>(){
 
             @Override
             public void onResponse(Call<QueryResponse> call, retrofit2.Response<QueryResponse> response) {
 
-
                 if(response.body() != null){
-                    Log.d(LOG_TAG , "Response body is "+ response.body().toString());
                     queryResponse = response.body();
 
                 }
 
                 else{ // response.body() is null and reponse.code() =400 so extract reponse from error code
-                    Log.d(LOG_TAG , "Response is null , reponse code = "+response.code());
                     if (response.code() == 400 ) {
-                        Log.d(LOG_TAG, "onResponse - Status : " + response.code());
                         Gson gson = new Gson();
                         TypeAdapter<QueryResponse> adapter = gson.getAdapter(QueryResponse.class);
                         try {
                             if (response.errorBody() != null)
                                 queryResponse = adapter.fromJson( response.errorBody().string());
-                            else{
-                                Log.d(LOG_TAG , "error.body() is null");
-                            }
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -326,20 +291,10 @@ public  class DetailActivity extends AppCompatActivity {
 
                 Query query = queryResponse.getQuery();
                 Results results = query.getResults();
-                int count = query.getCount();
 
                 quoteList = results.getQuote();
 
-               // mProgressBar.setVisibility(View.INVISIBLE);
-
                 quoteHash = saveStockQuotes(quoteList);
-
-
-               // addQuotes(quoteHash);
-
-                Log.d(LOG_TAG , "getQuotes() finished  , size of quotesList =" +quoteList.size() );
-
-//                mProgressBar.setVisibility(View.INVISIBLE);
 
                createTabbedLayout();
             }
@@ -350,7 +305,6 @@ public  class DetailActivity extends AppCompatActivity {
             }
         });
 
-        //Log.d(LOG_TAG , "getQuotes() finished "  );
     }
 
 
@@ -359,7 +313,6 @@ public  class DetailActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(LOG_TAG , "Inside onSaveInstanceState , quoteList size = " +quoteList.size());
         outState.putParcelableArrayList(QUOTE_LIST_BUNDLE , quoteList);
     }
 

@@ -2,7 +2,6 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -33,8 +32,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Utils {
 
-  private static String LOG_TAG = Utils.class.getSimpleName();
-
   public static boolean showPercent = true;
 
   public static ArrayList quoteJsonToContentVals(String JSON){
@@ -57,9 +54,7 @@ public class Utils {
           */
           String BidPrice = jsonObject.getString("Bid");
 
-          Log.d(LOG_TAG , "BidPrice Value = " +BidPrice );
           if (BidPrice.equals("null")){
-            Log.d(LOG_TAG , "BidPrice is null here");
             //Empty arrayList is returned here
           }
           else{
@@ -79,7 +74,6 @@ public class Utils {
         }
       }
     } catch (JSONException e){
-      Log.e(LOG_TAG, "String to JSON failed: " + e);
     }
     return batchOperations;
   }
@@ -87,9 +81,7 @@ public class Utils {
   public static String truncateBidPrice(String bidPrice){
 
     //handle error in case no stock found
-    Log.d(LOG_TAG , "BidPrice = "+bidPrice);
     if(bidPrice ==null){
-      Log.d(LOG_TAG , "Inside if Block");
       return "";
     }
     else{
@@ -123,14 +115,8 @@ public class Utils {
       String change = jsonObject.getString("Change");
       builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
 
-    /*  String BidPrice = jsonObject.getString("Bid");
-      Log.d(LOG_TAG , "BidPrice Value = " +BidPrice );
-      if (BidPrice.equals("null")){
-        Log.d(LOG_TAG , "BidPrice is null here");
-      }
-      else{*/
-        builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
-     // }
+      builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+
 
       builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
           jsonObject.getString("ChangeinPercent"), true));
@@ -250,7 +236,6 @@ public class Utils {
       long duration = curDate.getTime() - date.getTime();
       long diffInDays = TimeUnit.DAYS.convert(duration, TimeUnit.MILLISECONDS);
 
-      Log.d(LOG_TAG, "Date : "+quote.getKey()+"  Value : "+quote.getValue());
 
       if(diffInDays <= days) {
         entries.add(new Entry(Float.parseFloat(quote.getValue().toString()), i));
@@ -265,12 +250,6 @@ public class Utils {
     LineDataSet dataset = new LineDataSet(entries, "");
 
 
-
-      Log.d(LOG_TAG, "quoteListSize = "+quoteList.size());
-   String stockSymbol = quoteList.get(0).getSymbol();
-
-       /* TextView stockSymbolView = (TextView) rootView.findViewById(R.id.stock_symbol);
-        stockSymbolView.setText(stockSymbol)*/;
 
     //Create the chart
     chart = (LineChart) rootView.findViewById(chartViewId);

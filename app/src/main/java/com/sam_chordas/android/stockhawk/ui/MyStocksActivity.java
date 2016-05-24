@@ -85,18 +85,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
       public void onReceive(Context context, Intent intent) {
         // Extract data included in the Intent
         String message = intent.getStringExtra("message");
-
-        Log.d("MyBroadcastReceiver", "Inside MyBroadcastReceiver");
-
-        if (MyStocksActivity.ACTION_BAD_STOCK.equals(message)) {
-          Log.d("MyBroadcastReceiver", "Inside if block for toast");
+   if (MyStocksActivity.ACTION_BAD_STOCK.equals(message)) {
           badStockToast();
 
         }
-
-
-        Log.d("receiver", "Got message: " + message);
-        Log.d("receiver","ACTION_BAD_STOCK is  :  " +MyStocksActivity.ACTION_BAD_STOCK);
       }
     };
 
@@ -164,7 +156,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 mCursor.moveToPosition(position);
 
                 String stockSymbol = mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL));
-                Log.d("MyStocksActivity" , "Stock Symbol is " +stockSymbol);
                 intent.putExtra("symbol", stockSymbol);
                 startActivity(intent);
 
@@ -192,8 +183,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                   // in the DB and proceed accordingly
 
                   // Here converted the input uppercase before searching for the stock
-
-
 
                     Cursor c = getContentResolver().query(
                             QuoteProvider.Quotes.CONTENT_URI,

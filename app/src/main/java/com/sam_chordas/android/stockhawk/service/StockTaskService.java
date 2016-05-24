@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
@@ -32,7 +31,6 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService{
-  private String LOG_TAG = StockTaskService.class.getSimpleName();
 
   private OkHttpClient client = new OkHttpClient();
   private Context mContext;
@@ -97,7 +95,9 @@ public class StockTaskService extends GcmTaskService{
           e.printStackTrace();
         }
       }
-    } else if (params.getTag().equals("add")){
+      initQueryCursor.close();
+    }
+    else if (params.getTag().equals("add")){
       isUpdate = false;
       // get symbol from params.getExtra and build query
       String stockInput = params.getExtras().getString("symbol");
@@ -120,9 +120,6 @@ public class StockTaskService extends GcmTaskService{
       try{
         getResponse = fetchData(urlString);
 
-     /*   Log.d(LOG_TAG, "Json space " + "\n##############################\n###########################################\n######################\n");
-        Log.d(LOG_TAG, "Json response: \n "+ getResponse);
-*/
         result = GcmNetworkManager.RESULT_SUCCESS;
         try {
           ContentValues contentValues = new ContentValues();
@@ -144,7 +141,6 @@ public class StockTaskService extends GcmTaskService{
             mContext.sendBroadcast(dataUpdatedIntent);
           }
           else {
-            Log.d("StockTaskService", "No update in Db , Incorrect stock provided , sending badStockIntentBroadcast");
 
            // return MyStocksActivity.ACTION_BAD_STOCK;
             Intent badStockIntent = new Intent(MyStocksActivity.BAD_INPUT_EVENT);
@@ -153,7 +149,7 @@ public class StockTaskService extends GcmTaskService{
           }
 
         }catch (RemoteException | OperationApplicationException e){
-          Log.e(LOG_TAG, "Error applying batch insert", e);
+
         }
       } catch (IOException e){
         e.printStackTrace();
