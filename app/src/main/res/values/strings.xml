@@ -28,6 +28,7 @@
     <string name="a11y_graph_desc">Graph displaying changes in stock over a period of:  <xliff:g id="duration">%1$s</xliff:g> days</string>
 
     <string name="fab_add_stock">Add new stock</string>
+    <string name="bad_stock_input">Bad Stock input. This stock does not exist</string>
 
 
 </resources>

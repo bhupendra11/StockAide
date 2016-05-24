@@ -65,6 +65,8 @@ public class CustomRecyclerView extends RecyclerView {
     private void updateEmptyView() {
         if (mEmptyView != null && getAdapter() != null) {
             boolean showEmptyView = getAdapter().getItemCount() == 0;
+
+
             mEmptyView.setVisibility(showEmptyView ? VISIBLE : GONE);
             setVisibility(showEmptyView ? GONE : VISIBLE);
         }

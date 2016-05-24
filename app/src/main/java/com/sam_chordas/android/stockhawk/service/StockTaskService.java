@@ -7,6 +7,7 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -145,9 +146,10 @@ public class StockTaskService extends GcmTaskService{
           else {
             Log.d("StockTaskService", "No update in Db , Incorrect stock provided , sending badStockIntentBroadcast");
 
-           // return MyStocksActivity.INCORRECT_STOCK_PROVIDED;
-            Intent badStockIntent = new Intent(MyStocksActivity.ACTION_BAD_STOCK).setPackage(mContext.getPackageName());
-            mContext.sendBroadcast(badStockIntent);
+           // return MyStocksActivity.ACTION_BAD_STOCK;
+            Intent badStockIntent = new Intent(MyStocksActivity.BAD_INPUT_EVENT);
+            badStockIntent.putExtra("message", MyStocksActivity.ACTION_BAD_STOCK);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(badStockIntent);
           }
 
         }catch (RemoteException | OperationApplicationException e){

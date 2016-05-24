@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,7 +65,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   boolean isConnected;
 
   public static final String ACTION_BAD_STOCK = "com.sam_chordas.android.stockhawk.ACTION_BAD_STOCK";
-  private MyBroadcastReceiver myBroadcastReceiver;
+  private BroadcastReceiver myBroadcastReceiver;
+
+  public static final String BAD_INPUT_EVENT = "bad_input_event";
+
 
   private FrameLayout frameLayout;
 
@@ -72,6 +76,29 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mContext = this;
+
+
+    // handler for received Intents for the "my-event" event
+    myBroadcastReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        // Extract data included in the Intent
+        String message = intent.getStringExtra("message");
+
+        Log.d("MyBroadcastReceiver", "Inside MyBroadcastReceiver");
+
+        if (MyStocksActivity.ACTION_BAD_STOCK.equals(message)) {
+          Log.d("MyBroadcastReceiver", "Inside if block for toast");
+          badStockToast();
+
+        }
+
+
+        Log.d("receiver", "Got message: " + message);
+        Log.d("receiver","ACTION_BAD_STOCK is  :  " +MyStocksActivity.ACTION_BAD_STOCK);
+      }
+    };
+
 
     frameLayout = (FrameLayout) findViewById(android.R.id.content);
 
@@ -233,31 +260,37 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
       GcmNetworkManager.getInstance(this).schedule(periodicTask);
     }
 
-    myBroadcastReceiver = new MyBroadcastReceiver();
-
-    //register BroadcastReceiver
-    IntentFilter intentFilter = new IntentFilter(ACTION_BAD_STOCK);
-    intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-    registerReceiver(myBroadcastReceiver, intentFilter);
 
   }
 
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    //un-register BroadcastReceiver
-    unregisterReceiver(myBroadcastReceiver);
-  }
+
 
   @Override
   public void onResume() {
     super.onResume();
     getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+
+    // Register mMessageReceiver to receive messages.
+    LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver,
+            new IntentFilter(BAD_INPUT_EVENT));
   }
+
+  @Override
+  protected void onPause() {
+    // Unregister since the activity is not visible
+    LocalBroadcastManager.getInstance(this).unregisterReceiver(myBroadcastReceiver);
+    super.onPause();
+  }
+
+  public void badStockToast(){
+    Toast.makeText(mContext, getString(R.string.bad_stock_input),Toast.LENGTH_SHORT).show();
+  }
+
 
   public void networkToast(){
     Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
   }
+
 
   public void restoreActionBar() {
     ActionBar actionBar = getSupportActionBar();
@@ -317,18 +350,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   }
 
 
-  public class MyBroadcastReceiver extends BroadcastReceiver {
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-      Log.d("MyBroadcastReceiver", "Inside MyBroadcastReceiver");
-
-      if (MyStocksActivity.ACTION_BAD_STOCK.equals(intent.getAction())) {
-        Toast.makeText(context, "Bad Stock input. This stock does not exist",Toast.LENGTH_SHORT);
-      }
-    }
-  }
 
 }
 

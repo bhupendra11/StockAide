@@ -75,6 +75,13 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+      <!--  &lt;!&ndash; Register a receiver which is used to broadcast a message and show toast in case incorrect stock is entered by user &ndash;&gt;
+        <receiver android:name="MyReceiver" >
+            <intent-filter>
+                <action android:name="de.vogella.android.mybroadcast" />
+            </intent-filter>
+        </receiver>-->
+
 
     </application>
 
