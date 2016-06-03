@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sam_chordas.android.stockhawk.ui.Month6Fragment"
+    tools:context="com.bhupendra.android.stockhawk.ui.Month6Fragment"
     android:id="@+id/month_6_fragment">
 
   <com.github.mikephil.charting.charts.LineChart

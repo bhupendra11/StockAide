@@ -25,7 +25,7 @@
         android:padding="16dp"
         android:visibility="gone"
         />
-    <com.sam_chordas.android.stockhawk.rest.CustomRecyclerView
+    <com.bhupendra.android.stockhawk.rest.CustomRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
